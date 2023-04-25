@@ -22,6 +22,7 @@ const App = () => {
     const copy = [...persons];
     copy.push({ name: newName, number: newNumber });
     setPersons(copy);
+    setFilterList(copy);
   }
 
   function handleFilter(e) {
@@ -36,6 +37,12 @@ const App = () => {
     }
   }
 
+  function handleSetNewName(e) {
+    setNewName(e.target.value);
+  }
+  function handleSetNewNumber(e) {
+    setNewNumber(e.target.value);
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -45,10 +52,10 @@ const App = () => {
       <h2>add a new</h2>
       <form>
         <div>
-          name: <input onChange={(e) => setNewName(e.target.value)} value={newName} />
+          name: <input onChange={handleSetNewName} value={newName} />
         </div>
         <div>
-          number: <input onChange={(e) => setNewNumber(e.target.value)} value={newNumber} />
+          number: <input onChange={handleSetNewNumber} value={newNumber} />
         </div>
         <div>
           <button onClick={handleSubmit}>add</button>
