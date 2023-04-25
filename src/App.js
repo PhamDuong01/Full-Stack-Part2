@@ -6,6 +6,11 @@ const App = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (persons.some((person) => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
+
     const copy = [...persons];
     copy.push({ name: newName });
     setPersons(copy);
