@@ -12,6 +12,8 @@ const App = () => {
   const [filterName, setFilterName] = useState("");
   const [filterList, setFilterList] = useState(persons);
 
+  //Extract the code that handles the communication with the backend into its own module by following the example shown earlier in this part of the course material.
+
   useEffect(() => {
     personService.getAll().then((response) => {
       setPersons(response);
