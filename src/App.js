@@ -51,7 +51,20 @@ const App = () => {
       setNewNumber("");
     });
   }
-
+  function handleDelete(id) {
+    const searchResults = persons.filter((person) => {
+      return person.id === Number(id);
+    });
+    const copy = persons.filter((person) => {
+      return person.id !== Number(id);
+    });
+    if (window.confirm(`Delete ${searchResults[0].name}?`)) {
+      personService.deletePerson(id).then((res) => {
+        setPersons(copy);
+        setFilterList(copy);
+      });
+    }
+  }
   const handleForm = {
     onSetName: function handleSetNewName(e) {
       setNewName(e.target.value);
@@ -69,7 +82,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonsForm name={newName} number={newNumber} handleForm={handleForm} />
       <h2>Numbers</h2>
-      <Persons persons={filterList} />
+      <Persons persons={filterList} onDelete={(e) => handleDelete(e)} />
     </div>
   );
 };

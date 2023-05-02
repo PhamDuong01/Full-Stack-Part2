@@ -6,8 +6,8 @@ const getAll = () => {
   const request = axios.get(baseUrl);
   return request.then((response) => response.data);
 };
-const deletePerson = (id, newObject) => {
-  const request = axios.delete(`${baseUrl}/${id}`, newObject);
+const deletePerson = (id) => {
+  const request = axios.delete(`${baseUrl}/${id}`);
   return request.then((response) => response.data);
 };
 const createPerson = (newObject) => {
