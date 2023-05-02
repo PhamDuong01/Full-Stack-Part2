@@ -36,7 +36,27 @@ const App = () => {
   function handleAddNew(e) {
     e.preventDefault();
     if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const personId = persons.filter((person) => person.name === newName);
+      const personUpdate = {
+        name: newName,
+        number: newNumber,
+        id: personId[0].id,
+      };
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one ?`
+        )
+      ) {
+        personService.updatePerson(personId[0].id, personUpdate).then((res) => {
+          const copy = persons.filter((person) => {
+            return person.id !== personId[0].id;
+          });
+          setPersons(copy.concat(res));
+          setFilterList(copy.concat(res));
+          setNewName("");
+          setNewNumber("");
+        });
+      }
       return;
     }
     const personInfo = {
@@ -51,6 +71,7 @@ const App = () => {
       setNewNumber("");
     });
   }
+
   function handleDelete(id) {
     const searchResults = persons.filter((person) => {
       return person.id === Number(id);
