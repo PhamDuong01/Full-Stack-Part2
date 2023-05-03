@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonsForm from "./components/PersonsForm";
 import Persons from "./components/Persons";
-import axios from "axios";
 import personService from "./services/personService";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,7 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
   const [filterList, setFilterList] = useState(persons);
-
+  const [errorMessage, setErrorMessage] = useState(null);
   //Extract the code that handles the communication with the backend into its own module by following the example shown earlier in this part of the course material.
 
   useEffect(() => {
@@ -53,8 +53,12 @@ const App = () => {
           });
           setPersons(copy.concat(res));
           setFilterList(copy.concat(res));
+          setErrorMessage(`Edit ${newName}`);
           setNewName("");
           setNewNumber("");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         });
       }
       return;
@@ -67,8 +71,13 @@ const App = () => {
     personService.createPerson(personInfo).then((res) => {
       setPersons(persons.concat(res));
       setFilterList(persons.concat(res));
+
+      setErrorMessage(`Added ${newName}`);
       setNewName("");
       setNewNumber("");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     });
   }
 
@@ -83,6 +92,10 @@ const App = () => {
       personService.deletePerson(id).then((res) => {
         setPersons(copy);
         setFilterList(copy);
+        setErrorMessage(`Delete ${searchResults[0].name}`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
       });
     }
   }
@@ -99,6 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter onFilter={handleFilter} name={filterName} />
       <h2>add a new</h2>
       <PersonsForm name={newName} number={newNumber} handleForm={handleForm} />
