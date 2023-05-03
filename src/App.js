@@ -12,6 +12,8 @@ const App = () => {
   const [filterName, setFilterName] = useState("");
   const [filterList, setFilterList] = useState(persons);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const [state, setState] = useState("error");
   //Extract the code that handles the communication with the backend into its own module by following the example shown earlier in this part of the course material.
 
   useEffect(() => {
@@ -89,14 +91,24 @@ const App = () => {
       return person.id !== Number(id);
     });
     if (window.confirm(`Delete ${searchResults[0].name}?`)) {
-      personService.deletePerson(id).then((res) => {
-        setPersons(copy);
-        setFilterList(copy);
-        setErrorMessage(`Delete ${searchResults[0].name}`);
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-      });
+      personService
+        .deletePerson(id)
+        .then((res) => {
+          setPersons(copy);
+          setFilterList(copy);
+          setErrorMessage(`Delete ${searchResults[0].name}`);
+        })
+        .catch((error) => {
+          setState("error failed");
+          setErrorMessage(`${searchResults[0].name} was already removed from server`);
+          setPersons(copy);
+          setFilterList(copy);
+        });
+
+      setTimeout(() => {
+        setErrorMessage(null);
+        setState("error");
+      }, 5000);
     }
   }
   const handleForm = {
@@ -112,7 +124,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage} state={state} />
       <Filter onFilter={handleFilter} name={filterName} />
       <h2>add a new</h2>
       <PersonsForm name={newName} number={newNumber} handleForm={handleForm} />
